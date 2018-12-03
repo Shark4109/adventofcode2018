@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
 )
 
 func line(id string) (bool, bool) {
@@ -13,21 +12,39 @@ func line(id string) (bool, bool) {
 
 func main() {
 	f, err := os.Open("./input/input.txt")
+	// f, err := os.Open("./input/test.txt")
 	if err != nil {
 		fmt.Println("there is error")
 		return
 	}
 
 	scanner := bufio.NewScanner(f)
-	frequency := 0
+	two := 0
+	three := 0
 	for scanner.Scan() {
 		line := scanner.Text()
-		offset, err := strconv.Atoi(line)
-		if err != nil {
-			fmt.Println("There was an error")
-		}
-		frequency += offset
-	}
+		chars := make(map[rune]int)
+		hasTwo := false
+		hasThree := false
 
-	fmt.Println("Final frequency:", frequency)
+		for _, char := range line {
+			chars[char]++
+		}
+		for _, num := range chars {
+			if num == 2 && !hasTwo {
+				hasTwo = true
+			}
+			if num == 3 && !hasThree {
+				hasThree = true
+			}
+		}
+
+		if hasTwo {
+			two++
+		}
+		if hasThree {
+			three++
+		}
+	}
+	fmt.Println("Checksum:", two*three)
 }
